@@ -1,0 +1,53 @@
+version: "3.2"
+
+networks:
+  frontend:
+  backend:
+
+
+services:
+
+    webmvc:
+        build:
+          context: ./Web/WebMvc
+          dockerfile: Dockerfile
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+          - CatalogUrl=http://catalog.api
+        container_name: webshop
+        ports:
+          - "5500:80"
+        networks:
+          - frontend
+        depends_on:
+          - catalog.api
+
+    catalog.api:
+        build:
+          context: ./Services/ProductCatalogApi
+          dockerfile: Dockerfile
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+
+        container_name: catalogapi
+        ports:
+          - "5000:80"
+        networks:
+          - backend
+          - frontend
+        depends_on:
+          - sqlserver
+
+
+
+
+    sqlserver:
+        image: "microsoft/mssql-server-linux"
+        container_name: sqlserver
+        ports:
+          - "1401:1433"
+        networks:
+          - backend
+        environment:
+          SA_PASSWORD: "MyComplexPassword!234"
+          ACCEPT_EULA: "Y"
