@@ -21,7 +21,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers  //with modifications
             _interaction = interaction;
         }
 
-        public IActionResult Index()
+        public IActionResult Index() //From ToDelete
         {
             return View();
         }
